@@ -40,11 +40,6 @@ public class ApiRequestBuilder {
                 .then().extract().response();
         registeredUserID= response.jsonPath().getString("data.id");
 
-
-
-
-
-
         return response;
     }
 
@@ -60,6 +55,25 @@ public class ApiRequestBuilder {
                 .log().all()
                 .put().prettyPeek()
                 .then().extract().response();
+
+    }
+
+    public static Response UpdateUserRoleResponse(String role){
+
+        String apiAminPath= "/APIDEV/admin/users/"+registeredUserID+"/role";
+
+        Response response=RestAssured.given()
+                .baseUri(baseURI)
+                .basePath(apiAminPath)
+                .headers("Content-Type","application/json")
+                .header("Authorization", "Bearer " + authToken)
+                .body(UpdateUserRolePayload(role))
+                .log().all()
+                .put().prettyPeek()
+                .then().extract().response();
+        registeredUserID= response.jsonPath().getString("data.id");
+        //authToken = response.jsonPath().getString("data.token");
+        return  response;
 
     }
 

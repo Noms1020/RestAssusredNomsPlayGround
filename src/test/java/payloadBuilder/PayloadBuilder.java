@@ -25,5 +25,12 @@ public class PayloadBuilder {
 
  }
 
+ public static  JSONObject UpdateUserRolePayload(String role){
+     JSONObject UpdateRole = new JSONObject();
+     UpdateRole.put("role",role);
+     return UpdateRole;
+ }
+
+
 
 }
