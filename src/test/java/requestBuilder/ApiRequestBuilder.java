@@ -58,13 +58,15 @@ public class ApiRequestBuilder {
 
     }
 
+
+
     public static Response UpdateUserRoleResponse(String role){
 
-        String apiAminPath= "/APIDEV/admin/users/"+registeredUserID+"/role";
+        String apiAdminPath= "/APIDEV/admin/users/"+registeredUserID+"/role";
 
         Response response=RestAssured.given()
                 .baseUri(baseURI)
-                .basePath(apiAminPath)
+                .basePath(apiAdminPath)
                 .headers("Content-Type","application/json")
                 .header("Authorization", "Bearer " + authToken)
                 .body(UpdateUserRolePayload(role))
@@ -72,8 +74,23 @@ public class ApiRequestBuilder {
                 .put().prettyPeek()
                 .then().extract().response();
         registeredUserID= response.jsonPath().getString("data.id");
-        //authToken = response.jsonPath().getString("data.token");
+        authToken = response.jsonPath().getString("data.token");
         return  response;
+
+    }
+
+    public static  Response deleteUserResponse(){
+        String apiPath = "/APIDEV/admin/users/"+registeredUserID;
+        Response response = RestAssured.given()
+                .baseUri(baseURI)
+                .basePath(apiPath)
+                .header("Content-Type","application/json")
+                .header("Authorization","Bearer " + authToken)
+                //.header("Authorization", "Bearer " + authToken)
+                .log().all()
+                .delete().prettyPeek()
+                .then().extract().response();
+        return response;
 
     }
 

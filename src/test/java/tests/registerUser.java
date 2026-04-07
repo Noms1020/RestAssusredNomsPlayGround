@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import requestBuilder.ApiRequestBuilder;
 import Utilities.databaseConnection;
+
 import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,7 +27,7 @@ public class registerUser {
     public void registerUserTest() {
         registeredEmail = Faker.instance().internet().emailAddress();
 
-        ApiRequestBuilder.registerUser("Simo", "Ndaba", registeredEmail, "Password@3","Password@3", "1deae17a-c67a-4bb0-bdeb-df0fc9e2e526")
+        ApiRequestBuilder.registerUser("Simo", "Ndaba", registeredEmail, "Password@3", "Password@3", "1deae17a-c67a-4bb0-bdeb-df0fc9e2e526")
                 .then()
                 .log().all()
                 .assertThat()
@@ -53,13 +54,15 @@ public class registerUser {
                 .statusCode(200);
     }
 
-    @Test(priority = 3 )
-    public void UpdateUserRoleTest(){
+    @Test(priority = 3)
+    public void UpdateUserRoleTest() {
         ApiRequestBuilder.UpdateUserRoleResponse("admin")
                 .then()
                 .assertThat()
-                .assertThat()
-                .statusCode(200);
+                .statusCode(200)
+                .body("message", equalTo("User role updated successfully"));
+        System.out.println("user role is updated to admin");
+
 
     }
 
@@ -69,7 +72,30 @@ public class registerUser {
                 .then()
                 .log().all()
                 .assertThat()
+                .statusCode(200)
+                .body("success", equalTo(true));
+                 //.body("data.role", equalTo("admin"));
+    }
+
+    @Test(priority = 5)
+    public void AdminReloginTest() {
+        ApiRequestBuilder.UserLogin(databaseConnection.getEmail, databaseConnection.getPassword)
+                .then()
+                .log().all()
+                .assertThat()
                 .statusCode(200);
+
+    }
+
+    @Test(priority = 6)
+    public void deleteUserTest() {
+        ApiRequestBuilder.deleteUserResponse()
+                .then()
+                .log().all()
+                .assertThat()
+                .statusCode(200)
+                .body("success", equalTo(true))
+                .body("message", equalTo("User deleted successfully"));
     }
 
 
